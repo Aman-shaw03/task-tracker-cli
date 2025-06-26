@@ -47,6 +47,7 @@ const addTodo = async function (myTodo) {
     try {
         // await fsP.access(filePath, fsP.constants.F_OK);
         // check weather the file exist for access
+        // i want a status field , which could either be done , not-done , in-progress
         try {
             todos = await loadTodo(); // get the todos
             console.log(myTodo);
@@ -58,6 +59,7 @@ const addTodo = async function (myTodo) {
         const newTodo = {
             id: await getIncrementedIds(todos),
             task: myTodo,
+            status: "not-done",
             createdAt: new Date().toISOString(),
         };
 
@@ -73,9 +75,22 @@ const addTodo = async function (myTodo) {
     }
 };
 
-const listTodo = async function () {
-    const data = await loadTodo();
-    return console.log(data);
+const listTodo = async function (listfilter = "all") {
+    let data = await loadTodo();
+    switch (listfilter) {
+        case "done":
+            data = data.filter((todo) => todo.status === "done");
+            break;
+        case "in-progress":
+            data = data.filter((todo) => todo.status === "in-progress");
+            break;
+        case "not-done":
+            data = data.filter((todo) => todo.status === "not-done");
+            break;
+        default:
+            break;
+    }
+    return console.log(JSON.stringify(data, null, 2));
 };
 
 const updateTodo = async function (todoId, givenTodo) {
@@ -92,7 +107,7 @@ const updateTodo = async function (todoId, givenTodo) {
             console.log("No todo found with that id.");
             return;
         }
-        console.log("Todo updated !!!");
+        console.log(`Todo updated !!!`);
         await fsP.writeFile(
             filePath,
             JSON.stringify(data, null, 2),
@@ -105,12 +120,46 @@ const updateTodo = async function (todoId, givenTodo) {
 
 }
 
+const updateStatusTodo = async function (status, todoId) {
+    try {
+        const data = await loadTodo()
+        const givenstatus = status.slice(5)
+        const options = ["done", "not-done", "in-progress"]
+        if(!options.includes(givenstatus)){
+            console.log("Invalid status provided. we accept 3 status 'Done' , 'not-done' , 'in-progress'")
+            return
+        }
+        let updated = false
+        data.forEach((todo) =>{
+            if(todo.id === Number(todoId)){
+                todo.status = givenstatus
+                updated = true
+            }
+        })
+        if (updated) {
+            console.log("Status of todo has been changed");
+            await fsP.writeFile(
+                filePath,
+                JSON.stringify(data, null, 2),
+                "utf-8"
+            );
+            console.log("Todo status updated! New list:", data);
+        } else {
+            console.log("No todo found with that id.");
+        }
+    } catch (error) {
+        console.error("Error in Update Status todo function", error)
+    }
+
+}
+
 const deleteTodo = async function (todoId) {
     try {
         const data = await loadTodo();
         const filtered = data.filter(todo => todo.id !== Number(todoId))
         if(data.length === filtered.length){
             console.log("No todo found with the same id to be deleted")
+            return
         }
         await fsP.writeFile(filePath, JSON.stringify(filtered, null , 2), "utf-8" )
         console.log("Todo deleted !!!")
@@ -141,6 +190,11 @@ if (prompts && prompts[0].toLowerCase() === "delete") {
 }
 if (prompts && prompts[0].toLowerCase() === "list") {
     console.log("You have choosen the list option of todo");
-    listTodo();
+    listTodo(prompts[1] || "all");
+}
+if (prompts && prompts[0].toLowerCase().startsWith("mark-")) {
+    console.log("You have choosen the update the status option of todo");
+    // listTodo(prompts[1]);
+    updateStatusTodo(prompts[0], prompts[1])
 }
 // loadTodo()

@@ -1,44 +1,26 @@
 [
   {
-    "task": "orange"
-  },
-  {
-    "task": "apple",
-    "createdAt": "2025-06-25T09:40:34.862Z"
-  },
-  {
-    "id": null,
-    "task": "liyeeche",
-    "createdAt": "2025-06-25T09:57:18.810Z"
-  },
-  {
-    "id": null,
-    "task": "liyeeche",
-    "createdAt": "2025-06-25T10:06:42.302Z"
-  },
-  {
-    "id": null,
-    "task": "tapioka",
-    "createdAt": "2025-06-25T10:06:55.697Z"
-  },
-  {
-    "id": null,
-    "task": "sitapal",
-    "createdAt": "2025-06-25T10:09:05.641Z"
-  },
-  {
     "id": 1,
-    "task": "banana",
-    "createdAt": "2025-06-25T16:23:17.996Z"
+    "task": "orange",
+    "status": "not-done",
+    "createdAt": "2025-06-26T09:48:47.728Z"
   },
   {
     "id": 2,
-    "task": "watermelon",
-    "createdAt": "2025-06-25T16:25:01.363Z"
+    "task": "banana",
+    "status": "not-done",
+    "createdAt": "2025-06-26T10:06:40.478Z"
+  },
+  {
+    "id": 3,
+    "task": "grapes",
+    "status": "done",
+    "createdAt": "2025-06-26T10:06:49.385Z"
   },
   {
     "id": 4,
-    "createdAt": "2025-06-25T16:40:44.674Z",
-    "task": "grapes"
+    "task": "pasta",
+    "status": "in-progress",
+    "createdAt": "2025-06-26T10:06:56.762Z"
   }
 ]
